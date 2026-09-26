@@ -2,23 +2,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import { Header } from './components/Header';
 import { CinematicWalkthrough } from './components/CinematicWalkthrough';
-import { FloorPlanNavigator } from './components/FloorPlanNavigator';
-import { MaterialLibrary } from './components/MaterialLibrary';
-import { ArchitecturalMonograph } from './components/ArchitecturalMonograph';
-import { StudioWorks } from './components/StudioWorks';
-import { InquiryForm } from './components/InquiryForm';
+import { CurtainCalculator } from './components/CurtainCalculator';
+import { BeforeAfterSlider } from './components/BeforeAfterSlider';
+import { B2BCommercialSection } from './components/B2BCommercialSection';
+import { Top7Strengths } from './components/Top7Strengths';
+import { OrderJourney } from './components/OrderJourney';
+import { VoiceConciergeAndInquiry } from './components/VoiceConciergeAndInquiry';
 import { Footer } from './components/Footer';
 import { RoomGridModal } from './components/RoomGridModal';
 import { RoomSpecDrawer } from './components/RoomSpecDrawer';
-import { RESIDENCE_ROOMS } from './data/residenceData';
-import { RoomSpec } from './types';
+import { CURTAIN_VOLUMES } from './data/muarData';
+import { CurtainRoomVolume } from './types';
 
 export const App: React.FC = () => {
   const [activeRoomIndex, setActiveRoomIndex] = useState(0);
   const [isGridModalOpen, setIsGridModalOpen] = useState(false);
-  const [inspectedRoom, setInspectedRoom] = useState<RoomSpec | null>(null);
+  const [inspectedRoom, setInspectedRoom] = useState<CurtainRoomVolume | null>(null);
   const [renderMode, setRenderMode] = useState<'ultra' | 'video'>('ultra');
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [activeDoor, setActiveDoor] = useState<'b2c' | 'b2b'>('b2c');
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const lenisRef = useRef<Lenis | null>(null);
@@ -44,12 +46,12 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Audio control
+  // Ambient soundtrack
   const toggleAudio = () => {
     if (!audioRef.current) {
       audioRef.current = new Audio('/assets/ambient_sound.mp3');
       audioRef.current.loop = true;
-      audioRef.current.volume = 0.45;
+      audioRef.current.volume = 0.4;
     }
 
     if (isAudioPlaying) {
@@ -71,19 +73,34 @@ export const App: React.FC = () => {
     const rect = walkthrough.getBoundingClientRect();
     const totalScrollable = walkthrough.offsetHeight - window.innerHeight;
     const targetScrollY =
-      window.scrollY + rect.top + (index / RESIDENCE_ROOMS.length) * totalScrollable;
+      window.scrollY + rect.top + (index / CURTAIN_VOLUMES.length) * totalScrollable;
 
     if (lenisRef.current) {
-      lenisRef.current.scrollTo(targetScrollY, { duration: 1.5 });
+      lenisRef.current.scrollTo(targetScrollY, { duration: 1.4 });
     } else {
       window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
     }
     setActiveRoomIndex(index);
   };
 
+  const handleSwitchDoor = (door: 'b2c' | 'b2b') => {
+    setActiveDoor(door);
+    if (door === 'b2b') {
+      const b2bEl = document.getElementById('b2b-section');
+      if (b2bEl && lenisRef.current) {
+        lenisRef.current.scrollTo('#b2b-section', { duration: 1.2 });
+      }
+    } else {
+      const calcEl = document.getElementById('calculator-section');
+      if (calcEl && lenisRef.current) {
+        lenisRef.current.scrollTo('#calculator-section', { duration: 1.2 });
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#0b0b0d] text-[#e8e6e1] selection:bg-[#c9b99a] selection:text-black">
-      {/* Global Header */}
+    <div className="min-h-screen bg-[#160B1C] text-[#F7F4EF] selection:bg-[#C5A069] selection:text-[#160B1C]">
+      {/* Top Header Navigation */}
       <Header
         onOpenGrid={() => setIsGridModalOpen(true)}
         isAudioPlaying={isAudioPlaying}
@@ -92,12 +109,12 @@ export const App: React.FC = () => {
         onToggleRenderMode={() =>
           setRenderMode((prev) => (prev === 'ultra' ? 'video' : 'ultra'))
         }
-        activeRoomIndex={activeRoomIndex}
-        totalRooms={RESIDENCE_ROOMS.length}
+        activeDoor={activeDoor}
+        onSwitchDoor={handleSwitchDoor}
       />
 
-      {/* Main Experience: Continuous Camera Walkthrough (Hero & Spatial Journey) */}
       <main>
+        {/* Continuous Spatial Walkthrough: Hero & 8 Curtain Volumes */}
         <CinematicWalkthrough
           renderMode={renderMode}
           onInspectRoom={(room) => setInspectedRoom(room)}
@@ -106,29 +123,29 @@ export const App: React.FC = () => {
           onJumpToRoom={handleJumpToRoom}
         />
 
-        {/* Architectural Monograph Philosophy */}
-        <ArchitecturalMonograph />
+        {/* 1. Curtain & Textile Calculator (Strict 1:2 Coefficient, 3 Products, 6 Fabrics) */}
+        <CurtainCalculator />
 
-        {/* Interactive Floor Plan Blueprint */}
-        <FloorPlanNavigator
-          onSelectRoom={handleJumpToRoom}
-          activeRoomIndex={activeRoomIndex}
-        />
+        {/* 2. Before / After Interactive Split Comparison Slider */}
+        <BeforeAfterSlider />
 
-        {/* Tactile Material Library */}
-        <MaterialLibrary />
+        {/* 3. B2B Corporate Systems & 12% VAT Calculator */}
+        <B2BCommercialSection />
 
-        {/* Selected Studio Portfolio Works */}
-        <StudioWorks />
+        {/* 4. Top-7 Strengths of MUAR A (With Video Reels) */}
+        <Top7Strengths />
 
-        {/* Commissions & Inquiry Form */}
-        <InquiryForm />
+        {/* 5. 5-Step Order Journey (Online Selection & 7,000 ₸ Deposit Note) */}
+        <OrderJourney />
+
+        {/* 6. Voice Concierge & Direct WhatsApp Inquiry */}
+        <VoiceConciergeAndInquiry />
       </main>
 
       {/* Colophon & Footer */}
       <Footer />
 
-      {/* Bento Grid Modal (triggered by 88 button in header) */}
+      {/* Bento Grid Modal (88 button) */}
       <RoomGridModal
         isOpen={isGridModalOpen}
         onClose={() => setIsGridModalOpen(false)}
@@ -136,7 +153,7 @@ export const App: React.FC = () => {
         activeRoomIndex={activeRoomIndex}
       />
 
-      {/* Architectural Specification Drawer */}
+      {/* Slide-out Textile Specification Drawer */}
       <RoomSpecDrawer
         room={inspectedRoom}
         isOpen={Boolean(inspectedRoom)}
