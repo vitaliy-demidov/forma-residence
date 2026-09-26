@@ -4,18 +4,19 @@
 
 @layer base {
   :root {
-    --bg-void: #160B1C;
-    --bg-surface: #23122B;
-    --text-primary: #F7F4EF;
-    --text-secondary: rgba(247, 244, 239, 0.72);
-    --border-hairline: rgba(197, 160, 105, 0.2);
-    --accent-gold: #C5A069;
-    --accent-gold-soft: #D9BC8B;
+    --bg-warm: #FAF7F2;
+    --bg-surface: #FFFFFF;
+    --bg-card: #F5F0E8;
+    --text-primary: #221C16;
+    --text-secondary: #6C6256;
+    --border-hairline: rgba(184, 142, 82, 0.2);
+    --accent-gold: #B88E52;
+    --accent-gold-soft: #D4B27C;
   }
 
   html {
     scroll-behavior: auto; /* Managed by Lenis */
-    background-color: var(--bg-void);
+    background-color: var(--bg-warm);
     color: var(--text-primary);
     font-family: 'Manrope', -apple-system, sans-serif;
   }
@@ -33,20 +34,20 @@
     font-variant-numeric: tabular-nums lining-nums !important;
   }
 
-  /* Custom subtle scrollbar */
+  /* Custom subtle warm scrollbar */
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #160B1C;
+    background: #FAF7F2;
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(197, 160, 105, 0.3);
-    border-radius: 2px;
+    background: rgba(184, 142, 82, 0.35);
+    border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(197, 160, 105, 0.6);
+    background: rgba(184, 142, 82, 0.65);
   }
 }
 
